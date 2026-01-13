@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const examSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    },
     subject: { 
         type: String, 
         required: true 
@@ -24,7 +29,7 @@ const examSchema = new mongoose.Schema({
     },
     studyHours: { 
         type: Number, 
-        required: true
+        required: true 
     },
     icon: { 
         type: String, 
@@ -34,9 +39,9 @@ const examSchema = new mongoose.Schema({
         type: String, 
         default: "#667eea" 
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    createdAt: { 
+        type: Date, 
+        default: Date.now 
     }
 });
 

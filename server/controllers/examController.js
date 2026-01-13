@@ -26,7 +26,8 @@ const addExam = async (req, res) => {
             priority,
             studyHours,
             icon,
-            color
+            color,
+            user: req.user.id // Attach the user ID from the token
         });
 
         res.status(201).json(exam);
@@ -41,13 +42,18 @@ const deleteExam = async (req, res) => {
     try {
         const exam = await Exam.findById(req.params.id);
 
-        if (exam) {
-            await Session.deleteMany({ examId: exam._id }); // Clean up sessions
-            await exam.deleteOne();
-            res.json({ message: 'Exam removed' });
-        } else {
-            res.status(404).json({ message: 'Exam not found' });
+        if (!exam) {
+            return res.status(404).json({ message: 'Exam not found' });
         }
+
+        // Check for user ownership
+        if (exam.user.toString() !== req.user.id) {
+            return res.status(401).json({ message: 'User not authorized' });
+        }
+
+        await Session.deleteMany({ examId: exam._id }); 
+        await exam.deleteOne();
+        res.json({ message: 'Exam removed' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

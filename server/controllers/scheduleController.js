@@ -18,13 +18,15 @@ const getSchedule = async (req, res) => {
 const toggleSession = async (req, res) => {
     try {
         const session = await Session.findById(req.params.id);
-        if (session) {
-            session.completed = !session.completed;
-            const updatedSession = await session.save();
-            res.json(updatedSession);
-        } else {
-            res.status(404).json({ message: 'Session not found' });
+        if (!session) return res.status(404).json({ message: 'Session not found' });
+
+        if (session.user.toString() !== req.user.id) {
+            return res.status(401).json({ message: 'User not authorized' });
         }
+
+        session.completed = !session.completed;
+        const updatedSession = await session.save();
+        res.json(updatedSession);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -34,48 +36,43 @@ const toggleSession = async (req, res) => {
 // @route   POST /api/schedule/generate
 const generateSchedule = async (req, res) => {
     try {
-        // 1. Clear future incomplete sessions (keep history)
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         
+        // 1. Delete ONLY this user's future incomplete sessions
         await Session.deleteMany({ 
+            user: req.user.id,
             date: { $gte: today },
             completed: false 
         });
 
-        // 2. Fetch all active exams
-        const exams = await Exam.find({ date: { $gte: today } });
+        // 2. Fetch ONLY this user's exams
+        const exams = await Exam.find({ 
+            user: req.user.id,
+            date: { $gte: today } 
+        });
 
         let newSessions = [];
 
-        // 3. The Scheduling Algorithm
         exams.forEach(exam => {
             const examDate = new Date(exam.date);
             examDate.setHours(0,0,0,0);
-            
-            // Calculate time window
             const timeDiff = examDate.getTime() - today.getTime();
             const daysUntil = Math.ceil(timeDiff / (1000 * 3600 * 24));
             
             if (daysUntil <= 0) return;
 
-            // Logic: Distribute study hours
-            const hoursPerSession = 2; // Default block size
+            const hoursPerSession = 2; 
             const sessionsNeeded = Math.ceil(exam.studyHours / hoursPerSession);
-            
-            // "Smart" Spacing: Don't cram everything today. Spread it out.
-            // Priority Multiplier could be added here (High priority = earlier sessions)
             const interval = Math.max(1, Math.floor((daysUntil - 1) / sessionsNeeded));
             
             for (let i = 0; i < sessionsNeeded; i++) {
                 const sessionDate = new Date(today);
-                // Spread sessions by the interval
                 sessionDate.setDate(today.getDate() + (i * interval));
-
-                // Stop if we hit the exam date
                 if (sessionDate >= examDate) break;
 
                 newSessions.push({
+                    user: req.user.id, // IMPORTANT: tag session with user ID
                     examId: exam._id,
                     subject: exam.subject,
                     topic: exam.topic,
@@ -88,12 +85,11 @@ const generateSchedule = async (req, res) => {
             }
         });
 
-        // 4. Save all new sessions
         if (newSessions.length > 0) {
             await Session.insertMany(newSessions);
         }
 
-        const fullSchedule = await Session.find({}).sort({ date: 1 });
+        const fullSchedule = await Session.find({ user: req.user.id }).sort({ date: 1 });
         res.json(fullSchedule);
 
     } catch (error) {

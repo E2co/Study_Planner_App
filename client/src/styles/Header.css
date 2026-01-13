@@ -1,6 +1,6 @@
 .header {
-  background-color: #1a1a1a;
-  border-bottom: 1px solid #2a2a2a;
+  background-color: #c0c0c0;
+  border-bottom: 1px solid #999;
   padding: 1rem 1.5rem;
   position: sticky;
   top: 0;
@@ -34,35 +34,55 @@
 .logo-text {
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #c62828;
 }
 
 .nav {
   display: flex;
   gap: 0.5rem;
+  margin-left: auto;
+  margin-right: 1rem;
 }
 
 .nav-button {
   background: transparent;
   border: none;
-  color: #888;
+  color: #333;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 500;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .nav-button:hover {
-  background-color: #2a2a2a;
-  color: #fff;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .nav-button.active {
-  background-color: #2a2a2a;
-  color: #fff;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #000;
+}
+
+.add-exam-button {
+  background-color: #c62828;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.add-exam-button:hover {
+  background-color: #b71c1c;
 }

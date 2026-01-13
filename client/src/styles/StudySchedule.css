@@ -1,7 +1,9 @@
 .study-schedule {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  background-color: #c0c0c0;
+  min-height: calc(100vh - 70px);
 }
 
 .schedule-header {
@@ -9,14 +11,136 @@
 }
 
 .schedule-title {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  color: #000;
 }
 
 .schedule-subtitle {
-  color: #888;
+  color: #333;
+  font-size: 1rem;
+}
+
+.generate-section {
+  background-color: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.generate-section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #000;
+}
+
+.generate-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
   font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #999;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background-color: #fff;
+  min-width: 150px;
+}
+
+.generate-button {
+  background-color: #c62828;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.generate-button:hover {
+  background-color: #b71c1c;
+}
+
+.progress-section {
+  background-color: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.progress-section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #000;
+}
+
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.progress-card {
+  background-color: #f5f5f5;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+}
+
+.progress-card h3 {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.progress-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.progress-value.blue {
+  color: #2196F3;
+}
+
+.progress-value.green {
+  color: #4CAF50;
+}
+
+.sessions-section {
+  background-color: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sessions-section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #000;
 }
 
 .schedule-list {
@@ -26,19 +150,20 @@
 }
 
 .schedule-item {
-  background-color: #1a1a1a;
-  border-radius: 1rem;
-  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
   display: flex;
   align-items: center;
   gap: 1rem;
   position: relative;
   overflow: hidden;
   transition: all 0.2s;
+  border: 1px solid #ddd;
 }
 
 .schedule-item:hover {
-  background-color: #222;
+  background-color: #ececec;
 }
 
 .schedule-item.completed {
@@ -91,20 +216,31 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #000;
 }
 
 .schedule-meta {
   font-size: 0.85rem;
-  color: #888;
+  color: #666;
+}
+
+.schedule-duration {
+  background-color: #c62828;
+  color: white;
+  padding: 0.35rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  flex-shrink: 0;
 }
 
 .complete-button {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 2px solid #2a2a2a;
+  border: 2px solid #999;
   background: transparent;
-  color: #888;
+  color: #666;
   font-size: 1.25rem;
   cursor: pointer;
   display: flex;
@@ -115,38 +251,18 @@
 }
 
 .complete-button:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: #4CAF50;
+  color: #4CAF50;
 }
 
 .schedule-item.completed .complete-button {
-  background-color: #10b981;
-  border-color: #10b981;
+  background-color: #4CAF50;
+  border-color: #4CAF50;
   color: white;
-}
-
-.regenerate-button {
-  background-color: #f59e0b; /* Amber color */
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s;
-}
-
-.regenerate-button:hover {
-  background-color: #d97706;
-}
-
-.regenerate-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
 }
 
 .schedule-loading, .schedule-error {
   padding: 2rem;
   text-align: center;
-  color: #888;
+  color: #666;
 }

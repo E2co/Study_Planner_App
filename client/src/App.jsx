@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import "./App.css"
+import './styles/Global.css';
 import Header from "./components/Header"
 import ExamDashboard from "./components/ExamDash"
 import AddExamForm from "./components/AddExamForm"
