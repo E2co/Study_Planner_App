@@ -1,4 +1,5 @@
 "use client"
+
 import ExamCard from "./ExamCard"
 import "../styles/ExamDash.css"
 
@@ -30,10 +31,10 @@ function ExamDash({ exams, onDeleteExam, onAddClick }) {
         <div className="exam-list">
           {sortedExams.map((exam) => (
             <ExamCard
-              key={exam.id}
+              key={exam._id}
               exam={exam}
               daysUntil={calculateDaysUntil(exam.date)}
-              onDelete={() => onDeleteExam(exam.id)}
+              onDelete={() => onDeleteExam(exam._id)}
             />
           ))}
         </div>

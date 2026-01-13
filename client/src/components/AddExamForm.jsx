@@ -33,6 +33,11 @@ function AddExamForm({ onSubmit, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    // Basic validation
+    if (!formData.subject || !formData.date) {
+        alert("Please fill in the subject and date")
+        return
+    }
     onSubmit(formData)
   }
 
@@ -152,12 +157,8 @@ function AddExamForm({ onSubmit, onCancel }) {
         </div>
 
         <div className="form-actions">
-          <button type="button" className="cancel-button" onClick={onCancel}>
-            Cancel
-          </button>
-          <button type="submit" className="submit-button">
-            Add Exam
-          </button>
+          <button type="button" className="cancel-button" onClick={onCancel}>Cancel</button>
+          <button type="submit" className="submit-button">Add Exam</button>
         </div>
       </form>
     </div>

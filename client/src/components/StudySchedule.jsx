@@ -3,57 +3,67 @@
 import { useState, useEffect } from "react"
 import "../styles/StudySchedule.css"
 
-function StudySchedule({ exams }) {
+function StudySchedule() {
   const [schedule, setSchedule] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
+  // 1. Fetch the existing schedule on load
   useEffect(() => {
-    generateSchedule()
-  }, [exams])
+    fetchSchedule()
+  }, [])
 
-  const generateSchedule = () => {
-    const sessions = []
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    exams.forEach((exam) => {
-      const examDate = new Date(exam.date)
-      examDate.setHours(0, 0, 0, 0)
-      const daysUntil = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24))
-
-      if (daysUntil > 0) {
-        const studyHours = exam.studyHours || 15
-        const sessionsNeeded = Math.ceil(studyHours / 2)
-        const daysForStudy = Math.max(daysUntil - 1, 1)
-        const sessionInterval = Math.floor(daysForStudy / sessionsNeeded)
-
-        for (let i = 0; i < sessionsNeeded; i++) {
-          const sessionDate = new Date(today)
-          sessionDate.setDate(today.getDate() + i * Math.max(sessionInterval, 1))
-
-          if (sessionDate < examDate) {
-            sessions.push({
-              id: `${exam.id}-${i}`,
-              subject: exam.subject,
-              topic: exam.topic,
-              date: sessionDate.toISOString().split("T")[0],
-              duration: Math.min(2, studyHours - i * 2),
-              color: exam.color,
-              icon: exam.icon,
-              completed: false,
-            })
-          }
-        }
-      }
-    })
-
-    sessions.sort((a, b) => new Date(a.date) - new Date(b.date))
-    setSchedule(sessions)
+  const fetchSchedule = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('http://localhost:8080/api/schedule')
+      if (!response.ok) throw new Error('Failed to fetch schedule')
+      
+      const data = await response.json()
+      setSchedule(data)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const toggleComplete = (id) => {
-    setSchedule(
-      schedule.map((session) => (session.id === id ? { ...session, completed: !session.completed } : session)),
-    )
+  // 2. Trigger the "Smart Algorithm" on the backend
+  const regenerateSchedule = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('http://localhost:8080/api/schedule/generate', {
+        method: 'POST'
+      })
+      if (!response.ok) throw new Error('Failed to generate plan')
+      
+      const data = await response.json()
+      setSchedule(data)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // 3. Update completion status in the database
+  const toggleComplete = async (id) => {
+    // Optimistic UI update (feels faster)
+    const originalSchedule = [...schedule]
+    setSchedule(schedule.map(s => 
+      s._id === id ? { ...s, completed: !s.completed } : s
+    ))
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/schedule/${id}/toggle`, {
+        method: 'PUT'
+      })
+      if (!response.ok) throw new Error('Failed to update session')
+    } catch (err) {
+      // Revert if API fails
+      setSchedule(originalSchedule)
+      setError("Could not save progress. check connection.")
+    }
   }
 
   const formatDate = (dateString) => {
@@ -63,36 +73,52 @@ function StudySchedule({ exams }) {
     return `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`
   }
 
+  if (loading && schedule.length === 0) return <div className="schedule-loading">Loading your plan...</div>
+  if (error) return <div className="schedule-error">Error: {error}</div>
+
   return (
     <div className="study-schedule">
       <div className="schedule-header">
-        <h2 className="schedule-title">Study Schedule</h2>
-        <p className="schedule-subtitle">{schedule.length} sessions planned</p>
+        <div>
+          <h2 className="schedule-title">Study Schedule</h2>
+          <p className="schedule-subtitle">{schedule.length} sessions planned</p>
+        </div>
+        {/* New Button to trigger the backend algorithm */}
+        <button className="regenerate-button" onClick={regenerateSchedule} disabled={loading}>
+          {loading ? "Planning..." : "⚡ Recalculate Plan"}
+        </button>
       </div>
 
       <div className="schedule-list">
-        {schedule.map((session) => (
-          <div key={session.id} className={`schedule-item ${session.completed ? "completed" : ""}`}>
-            <div className="schedule-indicator" style={{ backgroundColor: session.color }} />
-
-            <div className="schedule-content">
-              <div className="schedule-icon" style={{ backgroundColor: session.color }}>
-                {session.icon}
-              </div>
-
-              <div className="schedule-details">
-                <h3 className="schedule-subject">{session.subject}</h3>
-                <p className="schedule-meta">
-                  {formatDate(session.date)} • {session.duration}h session
-                </p>
-              </div>
+        {schedule.length === 0 ? (
+            <div className="empty-state">
+                <p>No study sessions found.</p>
+                <button onClick={regenerateSchedule}>Generate a Plan</button>
             </div>
+        ) : (
+            schedule.map((session) => (
+            <div key={session._id} className={`schedule-item ${session.completed ? "completed" : ""}`}>
+                <div className="schedule-indicator" style={{ backgroundColor: session.color || '#ccc' }} />
 
-            <button className="complete-button" onClick={() => toggleComplete(session.id)}>
-              {session.completed ? "✓" : "○"}
-            </button>
-          </div>
-        ))}
+                <div className="schedule-content">
+                <div className="schedule-icon" style={{ backgroundColor: session.color || '#ccc' }}>
+                    {session.icon || '📚'}
+                </div>
+
+                <div className="schedule-details">
+                    <h3 className="schedule-subject">{session.subject}</h3>
+                    <p className="schedule-meta">
+                    {formatDate(session.date)} • {session.duration}h session
+                    </p>
+                </div>
+                </div>
+
+                <button className="complete-button" onClick={() => toggleComplete(session._id)}>
+                {session.completed ? "✓" : "○"}
+                </button>
+            </div>
+            ))
+        )}
       </div>
     </div>
   )
