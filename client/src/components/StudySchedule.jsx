@@ -3,20 +3,31 @@
 import { useState, useEffect } from "react"
 import "../styles/StudySchedule.css"
 
-function StudySchedule() {
+function StudySchedule({ user }) { // Receive user object containing the token
   const [schedule, setSchedule] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  // Helper to get headers easily
+  const getAuthHeaders = () => ({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${user.token}` //
+  });
+
   // 1. Fetch the existing schedule on load
   useEffect(() => {
-    fetchSchedule()
-  }, [])
+    if (user && user.token) {
+        fetchSchedule()
+    }
+  }, [user])
 
   const fetchSchedule = async () => {
     try {
       setLoading(true)
-      const response = await fetch('http://localhost:8080/api/schedule')
+      const response = await fetch('http://localhost:8080/api/schedule', {
+        headers: getAuthHeaders() // Added Auth Header
+      })
+
       if (!response.ok) throw new Error('Failed to fetch schedule')
       
       const data = await response.json()
@@ -33,8 +44,10 @@ function StudySchedule() {
     try {
       setLoading(true)
       const response = await fetch('http://localhost:8080/api/schedule/generate', {
-        method: 'POST'
+        method: 'POST',
+        headers: getAuthHeaders() // Added Auth Header
       })
+
       if (!response.ok) throw new Error('Failed to generate plan')
       
       const data = await response.json()
@@ -48,7 +61,7 @@ function StudySchedule() {
 
   // 3. Update completion status in the database
   const toggleComplete = async (id) => {
-    // Optimistic UI update (feels faster)
+    // Optimistic UI update
     const originalSchedule = [...schedule]
     setSchedule(schedule.map(s => 
       s._id === id ? { ...s, completed: !s.completed } : s
@@ -56,8 +69,10 @@ function StudySchedule() {
 
     try {
       const response = await fetch(`http://localhost:8080/api/schedule/${id}/toggle`, {
-        method: 'PUT'
+        method: 'PUT',
+        headers: getAuthHeaders() // Added Auth Header
       })
+      
       if (!response.ok) throw new Error('Failed to update session')
     } catch (err) {
       // Revert if API fails
@@ -83,9 +98,8 @@ function StudySchedule() {
           <h2 className="schedule-title">Study Schedule</h2>
           <p className="schedule-subtitle">{schedule.length} sessions planned</p>
         </div>
-        {/* New Button to trigger the backend algorithm */}
         <button className="regenerate-button" onClick={regenerateSchedule} disabled={loading}>
-          {loading ? "Planning..." : "⚡ Recalculate Plan"}
+          {loading ? "Planning..." : "🔃 Recalculate Plan"}
         </button>
       </div>
 

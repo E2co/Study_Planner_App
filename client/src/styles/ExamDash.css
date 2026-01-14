@@ -1,41 +1,75 @@
 .exam-dashboard {
+  padding: 40px 20px;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 3rem 2rem;
-  background-color: #c0c0c0;
-  min-height: calc(100vh - 70px);
 }
 
 .dashboard-header {
-  text-align: center;
-  margin-bottom: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
 .dashboard-title {
-  font-size: 2.5rem;
+  font-size: 36px;
   font-weight: 700;
-  color: #000;
-  margin-bottom: 0.5rem;
+  color: #2d2d2d;
 }
 
 .dashboard-subtitle {
-  font-size: 1rem;
-  color: #333;
+  font-size: 16px;
+  color: #7a5534;
+  margin-top: 8px;
 }
 
+/*.add-button {
+  background-color: #c92a2a;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.add-button:hover {
+  background-color: #b02020;
+}
+
+.add-icon {
+  font-size: 24px;
+  line-height: 1;
+}*/
+
 .exams-container {
-  margin-top: 2rem;
+  background-color: #d8d8d8;
+  border: 2px solid #a0a0a0;
+  border-radius: 8px;
+  padding: 30px;
+}
+
+.exam-count {
+  font-size: 16px;
+  font-weight: 600;
+  color: #5a5a5a;
+  margin-bottom: 20px;
 }
 
 .exam-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
-  gap: 2rem;
-  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 @media (max-width: 768px) {
-  .exam-list {
-    grid-template-columns: 1fr;
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
   }
 }

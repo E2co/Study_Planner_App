@@ -40,8 +40,8 @@
 .nav {
   display: flex;
   gap: 0.5rem;
-  margin-left: auto;
-  margin-right: 1rem;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .nav-button {
@@ -51,7 +51,7 @@
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 500;
   transition: all 0.2s;
   display: flex;
@@ -67,22 +67,43 @@
   background-color: rgba(0, 0, 0, 0.1);
   color: #000;
 }
-
-.add-exam-button {
-  background-color: #c62828;
+.logout-button {
+  background-color: #c92a2a;
   color: white;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all 0.2s;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+.logout-button:hover {
+  background-color: #b02020;
+}
+.logout-icon {
+  margin-right: 0.5rem;
+}
+
+/* Ensure the nav and action buttons sit on one line */
+.header-right {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+/* Small, prominent add button */
+.add-exam-button {
+  background-color: #2b7cff;
+  color: white;
+  border: none;
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: background-color 0.15s;
+}
 .add-exam-button:hover {
-  background-color: #b71c1c;
+  background-color: #235fcf;
 }

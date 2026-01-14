@@ -1,12 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const connectDB = require('./src/config/db');
+const connectDB = require('./config/db');
 
 // Route files
-const examRoutes = require('./src/routes/examRoutes');
-const scheduleRoutes = require('./src/routes/scheduleRoutes');
-const authRoutes = require('./src/routes/authRoutes');
+const examRoutes = require('./routes/examRoutes');
+const scheduleRoutes = require('./routes/scheduleRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 

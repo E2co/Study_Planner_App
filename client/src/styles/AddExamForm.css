@@ -1,9 +1,9 @@
 .add-exam-form-container {
   max-width: 500px;
-  margin: 0 auto;
+  margin: 25px auto;
   padding: 0;
   background-color: #d9d9d9;
-  border-radius: 1rem;
+  border-radius: 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -116,6 +116,41 @@
   border-color: #000;
   box-shadow: 0 0 0 2px #fff;
   transform: scale(1.05);
+}
+
+/* Icon picker styles */
+.icon-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.icon-option {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.5rem;
+  border: 2px solid transparent;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: all 0.12s ease-in-out;
+}
+
+.icon-option:hover {
+  transform: translateY(-2px);
+}
+
+.icon-option.selected {
+  border-color: #000;
+  box-shadow: 0 0 0 4px #fff inset, 0 4px 10px rgba(0,0,0,0.08);
+  transform: scale(1.06);
+}
+
+.icon-emoji {
+  line-height: 1;
 }
 
 .priority-picker {

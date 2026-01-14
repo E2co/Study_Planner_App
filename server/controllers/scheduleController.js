@@ -5,8 +5,8 @@ const Exam = require('../models/Exam');
 // @route   GET /api/schedule
 const getSchedule = async (req, res) => {
     try {
-        // Return sessions sorted by date
-        const sessions = await Session.find({}).sort({ date: 1 });
+        // Return ONLY this user's sessions sorted by date
+        const sessions = await Session.find({ user: req.user.id }).sort({ date: 1 });
         res.json(sessions);
     } catch (error) {
         res.status(500).json({ message: error.message });

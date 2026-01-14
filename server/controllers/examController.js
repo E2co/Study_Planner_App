@@ -5,7 +5,8 @@ const Session = require('../models/Session');
 // @route   GET /api/exams
 const getExams = async (req, res) => {
     try {
-        const exams = await Exam.find({});
+        // Return only exams belonging to the authenticated user
+        const exams = await Exam.find({ user: req.user.id }).sort({ date: 1 });
         res.json(exams);
     } catch (error) {
         res.status(500).json({ message: error.message });

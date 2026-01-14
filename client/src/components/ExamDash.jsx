@@ -21,7 +21,7 @@ function ExamDash({ exams, onDeleteExam, onAddClick }) {
       <div className="dashboard-header">
         <h2 className="dashboard-title">My Exams</h2>
         <button className="add-button" onClick={onAddClick}>
-          <span className="add-icon">+</span>
+          {/*<span className="add-icon">+</span>*/}
         </button>
       </div>
 
